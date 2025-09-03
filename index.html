@@ -18,13 +18,13 @@
 
     h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 10rem; /* default besar */
+      font-size: 10rem;
       font-weight: 900;
       color: #fff;
-      position: relative;
-      z-index: 2;
+      position: absolute;
       letter-spacing: 6px;
-      text-align: center;
+      cursor: default;
+      transition: transform 0.3s ease; /* biar smooth */
     }
 
     h1::before {
@@ -68,30 +68,52 @@
       100% { background-position: 200% 50%; }
     }
 
-    /* --- Responsif --- */
+    /* Responsive biar di HP gak kegedean */
     @media (max-width: 1024px) {
-      h1 {
-        font-size: 6rem;
-        letter-spacing: 4px;
-      }
+      h1 { font-size: 6rem; letter-spacing: 4px; }
     }
-
     @media (max-width: 768px) {
-      h1 {
-        font-size: 4rem;
-        letter-spacing: 3px;
-      }
+      h1 { font-size: 4rem; letter-spacing: 3px; }
     }
-
     @media (max-width: 480px) {
-      h1 {
-        font-size: 2.5rem;
-        letter-spacing: 2px;
-      }
+      h1 { font-size: 2.5rem; letter-spacing: 2px; }
     }
   </style>
 </head>
 <body>
-  <h1>KULAM</h1>
+  <h1 id="title">KULAM</h1>
+
+  <script>
+    const title = document.getElementById("title");
+    const moveStrength = 200; // seberapa jauh teks bisa lari
+
+    function moveAway(x, y) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const deltaX = x - centerX;
+      const deltaY = y - centerY;
+
+      // normalisasi arah
+      const angle = Math.atan2(deltaY, deltaX);
+      const distance = Math.min(Math.sqrt(deltaX ** 2 + deltaY ** 2), moveStrength);
+
+      const offsetX = Math.cos(angle) * distance;
+      const offsetY = Math.sin(angle) * distance;
+
+      title.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    // Desktop: pakai mousemove
+    document.addEventListener("mousemove", (e) => {
+      moveAway(e.clientX, e.clientY);
+    });
+
+    // Mobile: pakai touch
+    document.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      moveAway(touch.clientX, touch.clientY);
+    });
+  </script>
 </body>
 </html>
