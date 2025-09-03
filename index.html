@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KULAM</title>
+  <!-- Google Fonts Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10rem;
+      font-weight: 900;
+      color: #fff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      letter-spacing: 6px;
+      transition: transform 0.6s ease; /* bikin smooth */
+      cursor: default;
+    }
+
+    /* Outline lapisan pelangi */
+    h1::before {
+      content: "KULAM";
+      position: absolute;
+      inset: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 6px transparent;
+      animation: rainbow 8s linear infinite;
+      z-index: -1;
+      opacity: 0.9;
+
+      text-shadow:
+        8px 8px 0 rgba(255,255,255,0.05),
+        -8px -8px 0 rgba(255,255,255,0.05),
+        16px 16px 0 rgba(255,255,255,0.03),
+        -16px -16px 0 rgba(255,255,255,0.03);
+    }
+
+    h1::after {
+      content: "KULAM";
+      position: absolute;
+      inset: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      background: linear-gradient(90deg, violet, blue, cyan, green, yellow, orange, red);
+      background-size: 400% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 6px transparent;
+      animation: rainbow 12s linear infinite reverse;
+      z-index: -2;
+      opacity: 0.5;
+
+      text-shadow:
+        12px 12px 0 rgba(255,255,255,0.04),
+        -12px -12px 0 rgba(255,255,255,0.04),
+        20px 20px 0 rgba(255,255,255,0.02),
+        -20px -20px 0 rgba(255,255,255,0.02);
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="kulam">KULAM</h1>
+
+  <script>
+    const text = document.getElementById("kulam");
+
+    document.addEventListener("mousemove", (e) => {
+      const winWidth = window.innerWidth;
+      const winHeight = window.innerHeight;
+
+      const textRect = text.getBoundingClientRect();
+      const textX = textRect.left + textRect.width / 2;
+      const textY = textRect.top + textRect.height / 2;
+
+      const deltaX = e.clientX - textX;
+      const deltaY = e.clientY - textY;
+
+      const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+
+      if (distance < 250) { // kalau cursor mendekat
+        // tentukan arah menjauh
+        const dirX = deltaX > 0 ? -1 : 1;
+        const dirY = deltaY > 0 ? -1 : 1;
+
+        // geser ke arah ujung layar
+        const offsetX = dirX * (winWidth / 2 - textRect.width / 2 - 50);
+        const offsetY = dirY * (winHeight / 2 - textRect.height / 2 - 50);
+
+        text.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+      } else {
+        // kembali ke tengah
+        text.style.transform = `translate(-50%, -50%)`;
+      }
+    });
+  </script>
+</body>
+</html>
