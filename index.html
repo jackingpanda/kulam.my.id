@@ -16,15 +16,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: none;
-  background: linear-gradient(135deg, #050822, #000010, #0b0f2f);
-  background-size: 400% 400%;
-  animation: bgMove 30s ease infinite;
-}
-
-@keyframes bgMove {
-  0% { background-position: 0% 0%; }
-  50% { background-position: 100% 100%; }
-  100% { background-position: 0% 0%; }
+  background: #ffffff;
 }
 
 h1 {
@@ -35,24 +27,16 @@ h1 {
   cursor: default;
   transition: transform 0.3s ease, font-family 0.1s ease;
   position: relative;
-  background: linear-gradient(90deg, #1c2a5a, #5aa0ff, #0b0f2f);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: rainbow 8s linear infinite, pulseFont 5s ease-in-out infinite;
+  color: #000000;
   text-shadow:
-    0 0 8px rgba(90,160,255,0.7),
-    0 0 16px rgba(90,160,255,0.5),
-    0 0 24px rgba(90,160,255,0.3);
+    0 0 4px rgba(0,0,0,0.2),
+    0 0 8px rgba(0,0,0,0.15);
+  animation: pulseFont 5s ease-in-out infinite;
 }
 
 @keyframes pulseFont {
   0%,100% { transform: scale(1); }
-  50% { transform: scale(0.7); }
-}
-
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
+  50% { transform: scale(0.8); }
 }
 
 @media (max-width: 1024px) { h1 { font-size:6rem; letter-spacing:4px;} }
@@ -63,11 +47,11 @@ h1 {
   position: absolute;
   width: 5px;
   height: 5px;
-  background: white;
+  background: rgba(0,0,0,0.3);
   border-radius: 50%;
   pointer-events: none;
   opacity: 0.6;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
   animation: float 1.5s linear forwards;
 }
 
@@ -81,8 +65,8 @@ h1 {
   bottom: 2vw;
   width: 40px;
   height: 40px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.2);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -91,17 +75,17 @@ h1 {
   transition: background 0.3s, transform 0.2s;
   z-index: 5;
 }
-#muteButton:hover { background: rgba(255,255,255,0.3); transform: scale(1.1);}
-#muteButton svg { width:50%; height:50%; fill:white;}
+#muteButton:hover { background: rgba(0,0,0,0.1); transform: scale(1.1);}
+#muteButton svg { width:50%; height:50%; fill:black;}
 #player {display:none;}
 
 #datetime {
   position: fixed;
   left: 1vw;
   bottom: 1vw;
-  font-size: 16px; /* lebih besar */
+  font-size: 18px;
   font-family: 'Courier New', monospace;
-  color: rgba(255,255,255,0.8);
+  color: rgba(0,0,0,0.7);
   z-index: 5;
   user-select: none;
 }
