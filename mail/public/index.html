@@ -2,71 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kulam MailGen</title>
+  <title>Kulam Temp Mail</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fdfdfd;
-      text-align: center;
-      padding: 40px;
-    }
-    h1 {
-      color: #333;
-    }
-    #email {
-      font-size: 1.5em;
-      margin: 20px 0;
-      cursor: pointer;
-      display: inline-block;
-      padding: 10px 20px;
-      background: #f4f4f4;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    #email:hover {
-      background: #eaeaea;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 6px;
-      border: none;
-      background: #4cafef;
-      color: white;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #359fd8;
-    }
-    .notice {
-      margin-top: 15px;
-      color: green;
-      font-size: 0.9em;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    h1 { color: #333; }
+    #email { font-size: 1.5em; margin: 20px; cursor: pointer; background: #eee; padding: 10px 20px; border-radius: 6px; display: inline-block; }
+    #email:hover { background: #ddd; }
+    button { padding: 10px 20px; background: #4cafef; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #359fd8; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 10px 0; padding: 10px; border-bottom: 1px solid #ccc; }
   </style>
 </head>
 <body>
-  <h1>Kulam Random Email Generator</h1>
-  <button onclick="generate()">Generate</button>
+  <h1>Kulam Temp Mail</h1>
+  <button onclick="generate()">Generate Email</button>
   <div id="email">Click "Generate"</div>
-  <div class="notice" id="notice"></div>
+  <button onclick="loadInbox()">Refresh Inbox</button>
+  <ul id="inbox"></ul>
 
   <script>
-    async function generate() {
-      const res = await fetch("/generate");
-      const data = await res.json();
-      const emailDiv = document.getElementById("email");
-      emailDiv.textContent = data.email;
+    let currentEmail = null;
 
-      emailDiv.onclick = function () {
-        navigator.clipboard.writeText(data.email).then(() => {
-          document.getElementById("notice").textContent = "Copied: " + data.email;
-          setTimeout(() => {
-            document.getElementById("notice").textContent = "";
-          }, 2000);
-        });
+    async function generate() {
+      const res = await fetch("http://localhost:3000/generate");
+      const data = await res.json();
+      currentEmail = data.email;
+      const emailDiv = document.getElementById("email");
+      emailDiv.textContent = currentEmail;
+      emailDiv.onclick = () => {
+        navigator.clipboard.writeText(currentEmail);
+        alert("Copied: " + currentEmail);
       };
+    }
+
+    async function loadInbox() {
+      if (!currentEmail) {
+        alert("Generate an email first!");
+        return;
+      }
+
+      const res = await fetch("http://localhost:3000/inbox/" + currentEmail);
+      const messages = await res.json();
+
+      const inbox = document.getElementById("inbox");
+      inbox.innerHTML = "";
+      messages.forEach((m) => {
+        const li = document.createElement("li");
+        li.textContent = `${m.from} - ${m.subject} (${m.date})`;
+        inbox.appendChild(li);
+      });
     }
   </script>
 </body>
