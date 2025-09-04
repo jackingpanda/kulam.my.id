@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KULAM</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:wght@900&family=Open+Sans:wght@900&family=Lato:wght@900&family=Poppins:wght@900&family=Raleway:wght@900&family=Playfair+Display:wght@900&family=Merriweather:wght@900&family=Oswald:wght@900&family=Nunito:wght@900&family=Pacifico&family=Caveat&family=Fira+Sans:wght@900&family=Bebas+Neue&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: none;
+  background: linear-gradient(135deg, #010119, #000010, #02041a);
+  background-size: 400% 400%;
+  animation: bgMove 30s ease infinite;
+}
+
+@keyframes bgMove {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  cursor: default;
+  transition: transform 0.3s ease, font-family 0.1s ease;
+  position: relative;
+  background: linear-gradient(90deg, #ffffff, #cde4ff, #99d0ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 8s linear infinite, pulseFont 5s ease-in-out infinite, flicker 0.7s infinite;
+  text-shadow:
+    0 0 20px rgba(255,255,255,1),
+    0 0 40px rgba(200,220,255,0.9),
+    0 0 60px rgba(180,200,255,0.7),
+    0 0 80px rgba(160,180,255,0.6),
+    0 0 100px rgba(140,160,255,0.5),
+    0 0 120px rgba(120,140,255,0.4);
+}
+
+@keyframes pulseFont {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(0.7); }
+}
+
+@keyframes rainbow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+  19%, 21%, 23%, 26%, 55%, 56% { opacity: 0.7; }
+}
+
+@media (max-width: 1024px) { h1 { font-size:6rem; letter-spacing:4px;} }
+@media (max-width: 768px) { h1 { font-size:4rem; letter-spacing:3px;} }
+@media (max-width: 480px) { h1 { font-size:2.5rem; letter-spacing:2px;} }
+
+.particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #99d0ff;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  animation: float 1.5s linear forwards;
+}
+
+@keyframes float {
+  to { transform: translateY(-50px) scale(0); opacity:0;}
+}
+
+#muteButton {
+  position: fixed;
+  right: 2vw;
+  bottom: 2vw;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  z-index: 5;
+}
+#muteButton:hover { background: rgba(255,255,255,0.3); transform: scale(1.1);}
+#muteButton svg { width:50%; height:50%; fill:white;}
+#player {display:none;}
+
+#datetime {
+  position: fixed;
+  left: 1vw;
+  bottom: 1vw;
+  font-size: 18px;
+  font-family: 'Courier New', monospace;
+  color: rgba(255,255,255,0.9);
+  z-index: 5;
+  user-select: none;
+}
+</style>
+</head>
+<body>
+
+<h1 id="title">KULAM</h1>
+<div id="player"></div>
+<div id="muteButton" title="Mute/Unmute">
+  <svg id="muteIcon" viewBox="0 0 24 24">
+    <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
+  </svg>
+</div>
+
+<div id="datetime"></div>
+
+<script>
+const title = document.getElementById("title");
+const moveStrength = 200;
+const fonts = ['Montserrat','Roboto','Open Sans','Lato','Poppins','Raleway','Playfair Display','Merriweather','Oswald','Nunito','Pacifico','Caveat','Fira Sans','Bebas Neue','Shadows Into Light'];
+let lastFont='';
+
+function moveAway(x,y){
+  const centerX=window.innerWidth/2;
+  const centerY=window.innerHeight/2;
+  const deltaX=x-centerX;
+  const deltaY=y-centerY;
+  const angle=Math.atan2(deltaY,deltaX);
+  const distance=Math.min(Math.sqrt(deltaX**2+deltaY**2),moveStrength);
+  const offsetX=Math.cos(angle)*distance;
+  const offsetY=Math.sin(angle)*distance;
+  title.style.transform=`translate(${offsetX}px, ${offsetY}px) scale(1)`;
+}
+
+function changeFontRandomly(){
+  let randomFont;
+  do{ randomFont=fonts[Math.floor(Math.random()*fonts.length)]; }
+  while(randomFont===lastFont);
+  title.style.fontFamily=randomFont;
+  lastFont=randomFont;
+}
+setInterval(changeFontRandomly,100);
+
+document.addEventListener("mousemove",(e)=>{moveAway(e.clientX,e.clientY); spawnParticle(e.clientX,e.clientY);});
+document.addEventListener("touchmove",(e)=>{const t=e.touches[0]; moveAway(t.clientX,t.clientY); spawnParticle(t.clientX,t.clientY);});
+function spawnParticle(x,y){const p=document.createElement('div'); p.className='particle'; p.style.left=(x-2.5)+'px'; p.style.top=(y-2.5)+'px'; document.body.appendChild(p); setTimeout(()=>p.remove(),1500);}
+
+// YouTube audio
+var tag=document.createElement('script');
+tag.src="https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+var player;
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player('player',{
+    height:'0', width:'0', videoId:'jfKfPfyJRdk',
+    playerVars:{autoplay:1,loop:1,playlist:'jfKfPfyJRdk',controls:0,modestbranding:1,rel:0},
+    events:{onReady:(e)=>e.target.playVideo()}
+  });
+}
+
+// Mute button
+const muteButton=document.getElementById('muteButton');
+const muteIcon=document.getElementById('muteIcon');
+let isMuted=false;
+muteButton.addEventListener('click',()=>{
+  if(!player) return;
+  isMuted=!isMuted;
+  if(isMuted){ player.mute(); muteIcon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-3.5 7l-5-5H3v-4h5l5-5v14z"/>'; }
+  else { player.unMute(); muteIcon.innerHTML='<path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>'; }
+});
+
+// Tanggal & waktu HH:MM
+const datetimeEl = document.getElementById('datetime');
+function updateDateTime() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mins = String(now.getMinutes()).padStart(2,'0');
+  datetimeEl.textContent = `${yy}//${mm}//${dd}  ${hh}:${mins}`;
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+</script>
+
+</body>
+</html>
