@@ -1,54 +1,37 @@
-const fs = require("fs");
 const express = require("express");
-const { google } = require("googleapis");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const credentials = require("./credentials.json");
-const token = require("./token.json");
+const generated = new Set();
 
-const { client_secret, client_id, redirect_uris } = credentials.installed;
-const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-oAuth2Client.setCredentials(token);
-
-const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
-
-app.use(express.static("public"));
-
-// API untuk ambil email terbaru
-app.get("/api/inbox/:alias", async (req, res) => {
-  const alias = req.params.alias.toLowerCase();
-  try {
-    const response = await gmail.users.messages.list({
-      userId: "me",
-      q: `to:${alias}@kulam.my.id`,
-      maxResults: 5,
-    });
-
-    if (!response.data.messages) {
-      return res.json([]);
-    }
-
-    const messages = await Promise.all(
-      response.data.messages.map(async (m) => {
-        const msg = await gmail.users.messages.get({ userId: "me", id: m.id });
-        return {
-          id: m.id,
-          snippet: msg.data.snippet,
-          from: msg.data.payload.headers.find((h) => h.name === "From")?.value,
-          subject: msg.data.payload.headers.find((h) => h.name === "Subject")?.value,
-        };
-      })
-    );
-
-    res.json(messages);
-  } catch (err) {
-    console.error("❌ Error fetching emails:", err);
-    res.status(500).json({ error: "Failed to fetch emails" });
+function randomName(length) {
+  const chars = "abcdefghijklmnopqrstuvwxyz";
+  let name = "";
+  for (let i = 0; i < length; i++) {
+    name += chars.charAt(Math.floor(Math.random() * chars.length));
   }
+  return name;
+}
+
+function generateUniqueEmail() {
+  let name;
+  do {
+    const len = Math.floor(Math.random() * 7) + 2; // 2–8 chars
+    name = randomName(len);
+  } while (generated.has(name));
+
+  generated.add(name);
+  return `${name}@kulam.my.id`;
+}
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/generate", (req, res) => {
+  res.json({ email: generateUniqueEmail() });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
