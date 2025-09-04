@@ -17,6 +17,16 @@ body {
   align-items: center;
   cursor: none;
   background: #ffffff;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 2px 2px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 h1 {
@@ -34,8 +44,8 @@ h1 {
     0 0 8px rgba(0,0,0,0.3),
     0 0 12px rgba(0,0,0,0.2);
   animation: pulseFont 5s ease-in-out infinite;
+  z-index: 1;
 }
-
 @keyframes pulseFont {
   0%,100% { transform: scale(1); }
   50% { transform: scale(0.8); }
@@ -56,7 +66,6 @@ h1 {
   mix-blend-mode: multiply;
   animation: float 1.5s linear forwards;
 }
-
 @keyframes float {
   to { transform: translateY(-50px) scale(0); opacity:0;}
 }
@@ -79,7 +88,6 @@ h1 {
 }
 #muteButton:hover { background: rgba(0,0,0,0.1); transform: scale(1.1);}
 #muteButton svg { width:50%; height:50%; fill:black;}
-#player {display:none;}
 
 #datetime {
   position: fixed;
@@ -96,7 +104,12 @@ h1 {
 <body>
 
 <h1 id="title">KULAM</h1>
-<div id="player"></div>
+
+<audio id="bgAudio" autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
 <div id="muteButton" title="Mute/Unmute">
   <svg id="muteIcon" viewBox="0 0 24 24">
     <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
@@ -136,29 +149,19 @@ document.addEventListener("mousemove",(e)=>{moveAway(e.clientX,e.clientY); spawn
 document.addEventListener("touchmove",(e)=>{const t=e.touches[0]; moveAway(t.clientX,t.clientY); spawnParticle(t.clientX,t.clientY);});
 function spawnParticle(x,y){const p=document.createElement('div'); p.className='particle'; p.style.left=(x-2.5)+'px'; p.style.top=(y-2.5)+'px'; document.body.appendChild(p); setTimeout(()=>p.remove(),1500);}
 
-// YouTube audio
-var tag=document.createElement('script');
-tag.src="https://www.youtube.com/iframe_api";
-document.body.appendChild(tag);
-
-var player;
-function onYouTubeIframeAPIReady(){
-  player=new YT.Player('player',{
-    height:'0', width:'0', videoId:'jfKfPfyJRdk',
-    playerVars:{autoplay:1,loop:1,playlist:'jfKfPfyJRdk',controls:0,modestbranding:1,rel:0},
-    events:{onReady:(e)=>e.target.playVideo()}
-  });
-}
-
-// Mute button
-const muteButton=document.getElementById('muteButton');
-const muteIcon=document.getElementById('muteIcon');
+// Mute Button
+const audio = document.getElementById('bgAudio');
+const muteButton = document.getElementById('muteButton');
+const muteIcon = document.getElementById('muteIcon');
 let isMuted=false;
 muteButton.addEventListener('click',()=>{
-  if(!player) return;
   isMuted=!isMuted;
-  if(isMuted){ player.mute(); muteIcon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-3.5 7l-5-5H3v-4h5l5-5v14z"/>'; }
-  else { player.unMute(); muteIcon.innerHTML='<path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>'; }
+  audio.muted=isMuted;
+  if(isMuted){
+    muteIcon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-3.5 7l-5-5H3v-4h5l5-5v14z"/>';
+  } else {
+    muteIcon.innerHTML='<path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>';
+  }
 });
 
 // Tanggal & waktu HH:MM:SS
