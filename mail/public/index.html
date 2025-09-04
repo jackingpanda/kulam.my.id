@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kulam Temp Mail</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background: #111; color: #eee; }
+    h1 { color: #4cafef; }
+    #email { font-size: 1.3em; margin: 20px 0; padding: 10px; background: #222; border-radius: 8px; display: inline-block; cursor: pointer; }
+    button { padding: 10px 20px; border: none; border-radius: 6px; background: #4cafef; color: white; cursor: pointer; }
+    button:hover { background: #359fd8; }
+    #inbox { margin-top: 20px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .mail { background: #222; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+    .from { color: #ff9800; }
+    .subject { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Kulam Temp Mail Generator</h1>
+  <button onclick="generateEmail()">Generate</button>
+  <div id="email">Click Generate</div>
+  <h2>Inbox</h2>
+  <div id="inbox">No emails yet.</div>
+
+  <script>
+    const generated = new Set();
+    let currentAlias = null;
+
+    function randomName(length) {
+      const chars = "abcdefghijklmnopqrstuvwxyz";
+      return Array.from({length}, () => chars[Math.floor(Math.random()*chars.length)]).join("");
+    }
+
+    function generateEmail() {
+      let name;
+      do {
+        const len = Math.floor(Math.random() * 7) + 2;
+        name = randomName(len);
+      } while (generated.has(name));
+
+      generated.add(name);
+      currentAlias = name;
+      const email = `${name}@kulam.my.id`;
+
+      const emailDiv = document.getElementById("email");
+      emailDiv.textContent = email;
+      emailDiv.onclick = () => navigator.clipboard.writeText(email);
+
+      loadInbox();
+    }
+
+    async function loadInbox() {
+      if (!currentAlias) return;
+      const inboxDiv = document.getElementById("inbox");
+      inboxDiv.innerHTML = "⏳ Loading...";
+
+      try {
+        const res = await fetch(`/api/inbox/${currentAlias}`);
+        const mails = await res.json();
+
+        if (!mails.length) {
+          inboxDiv.innerHTML = "No emails yet.";
+          return;
+        }
+
+        inboxDiv.innerHTML = "";
+        mails.forEach(m => {
+          const div = document.createElement("div");
+          div.className = "mail";
+          div.innerHTML = `<div class="from">From: ${m.from || "Unknown"}</div>
+                           <div class="subject">${m.subject || "(No subject)"}</div>
+                           <div>${m.snippet}</div>`;
+          inboxDiv.appendChild(div);
+        });
+      } catch (e) {
+        inboxDiv.innerHTML = "❌ Failed to load inbox.";
+      }
+    }
+
+    setInterval(loadInbox, 10000);
+  </script>
+</body>
+</html>
