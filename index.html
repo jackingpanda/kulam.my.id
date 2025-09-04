@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KULAM</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:wght@900&family=Open+Sans:wght@900&family=Lato:wght@900&family=Poppins:wght@900&family=Raleway:wght@900&family=Playfair+Display:wght@900&family=Merriweather:wght@900&family=Oswald:wght@900&family=Nunito:wght@900&family=Pacifico&family=Caveat&family=Fira+Sans:wght@900&family=Bebas+Neue&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10rem;
+      font-weight: 900;
+      color: #fff;
+      position: absolute;
+      letter-spacing: 6px;
+      cursor: default;
+      transition: transform 0.3s ease, font-family 0.1s ease;
+    }
+
+    h1::before {
+      content: "KULAM";
+      position: absolute;
+      inset: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 6px transparent;
+      animation: rainbow 8s linear infinite;
+      z-index: -1;
+      opacity: 0.9;
+    }
+
+    h1::after {
+      content: "KULAM";
+      position: absolute;
+      inset: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+      background: linear-gradient(90deg, violet, blue, cyan, green, yellow, orange, red);
+      background-size: 400% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: 6px transparent;
+      animation: rainbow 12s linear infinite reverse;
+      z-index: -2;
+      opacity: 0.5;
+    }
+
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      h1 { font-size: 6rem; letter-spacing: 4px; }
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 4rem; letter-spacing: 3px; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 2.5rem; letter-spacing: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">KULAM</h1>
+
+  <script>
+    const title = document.getElementById("title");
+    const moveStrength = 200; // seberapa jauh teks bisa lari
+
+    // 15 font terbaik
+    const fonts = [
+      'Montserrat', 'Roboto', 'Open Sans', 'Lato', 'Poppins', 
+      'Raleway', 'Playfair Display', 'Merriweather', 'Oswald', 'Nunito', 
+      'Pacifico', 'Caveat', 'Fira Sans', 'Bebas Neue', 'Shadows Into Light'
+    ];
+    let lastFont = '';
+
+    function moveAway(x, y) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const deltaX = x - centerX;
+      const deltaY = y - centerY;
+
+      const angle = Math.atan2(deltaY, deltaX);
+      const distance = Math.min(Math.sqrt(deltaX ** 2 + deltaY ** 2), moveStrength);
+
+      const offsetX = Math.cos(angle) * distance;
+      const offsetY = Math.sin(angle) * distance;
+
+      title.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    // Desktop
+    document.addEventListener("mousemove", (e) => {
+      moveAway(e.clientX, e.clientY);
+    });
+
+    // Mobile
+    document.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      moveAway(touch.clientX, touch.clientY);
+    });
+
+    // Ganti font acak tapi selalu berbeda dari sebelumnya
+    function changeFontRandomly() {
+      let randomFont;
+      do {
+        randomFont = fonts[Math.floor(Math.random() * fonts.length)];
+      } while (randomFont === lastFont);
+      title.style.fontFamily = randomFont;
+      lastFont = randomFont;
+    }
+
+    setInterval(changeFontRandomly, 100); // 0.1 detik
+  </script>
+</body>
+</html>
