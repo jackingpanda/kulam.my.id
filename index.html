@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KULAM</title>
+<title>KULAM Neon</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:wght@900&family=Open+Sans:wght@900&family=Lato:wght@900&family=Poppins:wght@900&family=Raleway:wght@900&family=Playfair+Display:wght@900&family=Merriweather:wght@900&family=Oswald:wght@900&family=Nunito:wght@900&family=Pacifico&family=Caveat&family=Fira+Sans:wght@900&family=Bebas+Neue&family=Shadows+Into+Light&display=swap" rel="stylesheet">
 
@@ -16,7 +16,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: none;
-  background: linear-gradient(135deg, #0b0f2f, #050822, #000010);
+  background: linear-gradient(135deg, #050822, #000010, #0b0f2f);
   background-size: 400% 400%;
   animation: bgMove 30s ease infinite;
 }
@@ -34,19 +34,15 @@ h1 {
   letter-spacing: 6px;
   cursor: default;
   transition: transform 0.3s ease, font-family 0.1s ease;
-  z-index: 2;
-  animation: pulseFont 5s ease-in-out infinite;
   position: relative;
-  color: transparent;
   background: linear-gradient(90deg, #1c2a5a, #5aa0ff, #0b0f2f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: rainbow 8s linear infinite, pulseFont 5s ease-in-out infinite;
   text-shadow:
-    0 0 4px rgba(255,255,255,0.1),
-    0 0 8px rgba(255,255,255,0.05),
-    0 0 12px rgba(255,255,255,0.03);
-  background-size: 400% auto;
-  animation: rainbow 8s linear infinite;
+    0 0 8px rgba(90,160,255,0.7),
+    0 0 16px rgba(90,160,255,0.5),
+    0 0 24px rgba(90,160,255,0.3);
 }
 
 @keyframes pulseFont {
@@ -103,9 +99,9 @@ h1 {
   position: fixed;
   left: 1vw;
   bottom: 1vw;
-  font-size: 14px; /* diperbesar */
+  font-size: 16px; /* lebih besar */
   font-family: 'Courier New', monospace;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.8);
   z-index: 5;
   user-select: none;
 }
