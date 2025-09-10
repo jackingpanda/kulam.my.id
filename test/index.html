@@ -16,21 +16,12 @@ body {
   justify-content: center;
   align-items: center;
   cursor: none;
-  background: #ffffff;
+  background: #000; /* hitam */
   position: relative;
-}
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
-  background-size: 2px 2px;
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* canvas smoke di belakang */
-#smokeCanvas {
+#fluid-canvas {
   position: fixed;
   top:0; left:0;
   width:100%;
@@ -46,12 +37,8 @@ h1 {
   cursor: default;
   transition: transform 0.3s ease, font-family 0.1s ease;
   position: relative;
-  color: #000000;
-  -webkit-text-stroke: 1px rgba(0,0,0,0.7);
-  text-shadow:
-    0 0 4px rgba(0,0,0,0.4),
-    0 0 8px rgba(0,0,0,0.3),
-    0 0 12px rgba(0,0,0,0.2);
+  color: #ffffff; /* putih */
+  text-shadow: 0 0 10px rgba(255,255,255,0.4);
   animation: pulseFont 5s ease-in-out infinite;
   z-index: 1;
 }
@@ -64,29 +51,14 @@ h1 {
 @media (max-width: 768px) { h1 { font-size:4rem; letter-spacing:3px;} }
 @media (max-width: 480px) { h1 { font-size:2.5rem; letter-spacing:2px;} }
 
-.particle {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  background: rgba(0,0,0,0.2);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  animation: float 1.5s linear forwards;
-}
-@keyframes float {
-  to { transform: translateY(-50px) scale(0); opacity:0;}
-}
-
 #muteButton {
   position: fixed;
   right: 2vw;
   bottom: 2vw;
   width: 40px;
   height: 40px;
-  background: rgba(0,0,0,0.05);
-  border: 1px solid rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -95,8 +67,8 @@ h1 {
   transition: background 0.3s, transform 0.2s;
   z-index: 5;
 }
-#muteButton:hover { background: rgba(0,0,0,0.1); transform: scale(1.1);}
-#muteButton svg { width:50%; height:50%; fill:black;}
+#muteButton:hover { background: rgba(255,255,255,0.1); transform: scale(1.1);}
+#muteButton svg { width:50%; height:50%; fill:white;}
 
 #datetime {
   position: fixed;
@@ -104,7 +76,7 @@ h1 {
   bottom: 1vw;
   font-size: 20px;
   font-family: 'Courier New', monospace;
-  color: rgba(0,0,0,0.8);
+  color: rgba(255,255,255,0.8);
   z-index: 5;
   user-select: none;
 }
@@ -113,7 +85,7 @@ h1 {
 <body>
 
 <!-- canvas smoke -->
-<canvas id="smokeCanvas"></canvas>
+<canvas id="fluid-canvas"></canvas>
 
 <h1 id="title">KULAM</h1>
 
@@ -131,7 +103,7 @@ h1 {
 <div id="datetime"></div>
 
 <script>
-// === TITLE INTERACTION ===
+// === TITLE INTERACTION (tanpa particle) ===
 const title = document.getElementById("title");
 const moveStrength = 200;
 const fonts = ['Montserrat','Roboto','Open Sans','Lato','Poppins','Raleway','Playfair Display','Merriweather','Oswald','Nunito','Pacifico','Caveat','Fira Sans','Bebas Neue','Shadows Into Light'];
@@ -157,9 +129,8 @@ function changeFontRandomly(){
 }
 setInterval(changeFontRandomly,100);
 
-document.addEventListener("mousemove",(e)=>{moveAway(e.clientX,e.clientY); spawnParticle(e.clientX,e.clientY);});
-document.addEventListener("touchmove",(e)=>{const t=e.touches[0]; moveAway(t.clientX,t.clientY); spawnParticle(t.clientX,t.clientY);});
-function spawnParticle(x,y){const p=document.createElement('div'); p.className='particle'; p.style.left=(x-2.5)+'px'; p.style.top=(y-2.5)+'px'; document.body.appendChild(p); setTimeout(()=>p.remove(),1500);}
+document.addEventListener("mousemove",(e)=>{moveAway(e.clientX,e.clientY);});
+document.addEventListener("touchmove",(e)=>{const t=e.touches[0]; moveAway(t.clientX,t.clientY);});
 
 // === MUTE BUTTON ===
 const audio = document.getElementById('bgAudio');
@@ -192,7 +163,7 @@ setInterval(updateDateTime, 1000);
 updateDateTime();
 </script>
 
-<!-- === SMOKE STREAM SCRIPT === -->
+<!-- === FLUID SMOKE SCRIPT === -->
 <script src="https://cdn.jsdelivr.net/gh/PavelDoGreat/WebGL-Fluid-Simulation/script.js"></script>
 
 </body>
