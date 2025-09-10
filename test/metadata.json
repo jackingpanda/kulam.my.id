@@ -1,0 +1,5 @@
+{
+  "name": "KULAM Smoke Homepage",
+  "description": "An interactive homepage for KULAM featuring a dynamic, mouse-driven smoke and fluid simulation created with WebGL.",
+  "requestFramePermissions": []
+}
