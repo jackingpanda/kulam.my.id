@@ -1,0 +1,5 @@
+{
+  "name": "Kulam MailGen",
+  "description": "A modern and sleek random email generator that creates unique email addresses with the @kulam.my.id domain. Users can generate new emails with a single click and easily copy them to the clipboard.",
+  "requestFramePermissions": []
+}
