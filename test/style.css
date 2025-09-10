@@ -1,0 +1,62 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #000; /* hitam */
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1; /* smoke background */
+}
+
+h1 {
+  font-size: 6rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  color: #fff; /* putih */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  z-index: 2; /* di atas smoke */
+  cursor: default;
+}
+
+#muteButton {
+  position: fixed;
+  right: 2vw;
+  bottom: 2vw;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  z-index: 3;
+}
+#muteButton:hover { background: rgba(255,255,255,0.1); transform: scale(1.1);}
+#muteButton svg { width:50%; height:50%; fill:white;}
+
+#datetime {
+  position: fixed;
+  left: 1vw;
+  bottom: 1vw;
+  font-size: 18px;
+  font-family: 'Courier New', monospace;
+  color: rgba(255,255,255,0.8);
+  z-index: 3;
+  user-select: none;
+}
