@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KULAM</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KULAM</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:wght@900&family=Open+Sans:wght@900&family=Lato:wght@900&family=Poppins:wght@900&family=Raleway:wght@900&family=Playfair+Display:wght@900&family=Merriweather:wght@900&family=Oswald:wght@900&family=Nunito:wght@900&family=Pacifico&family=Caveat&family=Fira+Sans:wght@900&family=Bebas+Neue&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<canvas></canvas>
+<canvas id="fluid-canvas"></canvas>
 <h1 id="title">KULAM</h1>
 
 <audio id="bgAudio" autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
 </audio>
 
 <div id="muteButton" title="Mute/Unmute">
@@ -26,7 +27,51 @@
 
 <div id="datetime"></div>
 
-<script src="./script.js"></script>
-<script src="./ui.js"></script>
+<script src="script.js"></script>
+<script>
+/* ---------------- Random Font ---------------- */
+const title = document.getElementById("title");
+const fonts = ['Montserrat','Roboto','Open Sans','Lato','Poppins','Raleway','Playfair Display','Merriweather','Oswald','Nunito','Pacifico','Caveat','Fira Sans','Bebas Neue','Shadows Into Light'];
+let lastFont='';
+function changeFontRandomly(){
+  let randomFont;
+  do{ randomFont=fonts[Math.floor(Math.random()*fonts.length)]; }
+  while(randomFont===lastFont);
+  title.style.fontFamily=randomFont;
+  lastFont=randomFont;
+}
+setInterval(changeFontRandomly,100);
+
+/* ---------------- Mute Button ---------------- */
+const audio = document.getElementById('bgAudio');
+const muteButton = document.getElementById('muteButton');
+const muteIcon = document.getElementById('muteIcon');
+let isMuted=false;
+muteButton.addEventListener('click',()=>{
+  isMuted=!isMuted;
+  audio.muted=isMuted;
+  if(isMuted){
+    muteIcon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-3.5 7l-5-5H3v-4h5l5-5v14z"/>';
+  } else {
+    muteIcon.innerHTML='<path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>';
+  }
+});
+
+/* ---------------- DateTime ---------------- */
+const datetimeEl = document.getElementById('datetime');
+function updateDateTime() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(-2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mins = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  datetimeEl.textContent = `${yy}//${mm}//${dd}  ${hh}:${mins}:${ss}`;
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+</script>
+
 </body>
 </html>
