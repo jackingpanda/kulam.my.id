@@ -1,0 +1,5 @@
+{
+  "name": "Anime Scene Generator",
+  "description": "An application that generates a unique, high-quality anime scene based on a detailed text prompt, capturing a specific mood and aesthetic.",
+  "requestFramePermissions": []
+}
