@@ -1,62 +1,74 @@
-html, body {
-  margin: 0;
-  height: 100%;
-  background: #000;
-  overflow: hidden;
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    color: white;
 }
-canvas {
-  display: block;
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-h1 {
-  white-space: nowrap;
-  font-size: 8rem;
-  font-weight: 900;
-  color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  letter-spacing: 0.35em;
-  z-index: 2;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.6);
-  text-shadow: 0 0 6px rgba(255,255,255,0.3);
-}
-@media (max-width: 1024px) { h1 { font-size:6rem; } }
-@media (max-width: 768px) { h1 { font-size:4rem; } }
-@media (max-width: 480px) { h1 { font-size:2.5rem; } }
 
-#muteButton {
-  position: fixed;
-  right: 2vw;
-  bottom: 2vw;
-  width: 40px;
-  height: 40px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  z-index: 3;
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    overflow: hidden;
 }
-#muteButton:hover { background: rgba(255,255,255,0.1); transform: scale(1.1);}
-#muteButton svg { width:50%; height:50%; fill:white;}
 
-#datetime {
-  position: fixed;
-  left: 1vw;
-  bottom: 1vw;
-  font-size: 20px;
-  font-family: 'Courier New', monospace;
-  color: rgba(255,255,255,0.8);
-  z-index: 3;
-  user-select: none;
+#smoke-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.content-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+#main-title {
+    font-size: 3.75rem; /* 6xl */
+    line-height: 1;
+    letter-spacing: normal;
+    user-select: none;
+    transition: transform 0.1s ease-out, text-shadow 0.1s ease-out;
+}
+
+#time-display {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    font-family: monospace;
+    font-size: 1rem; /* base */
+    line-height: 1.5rem;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Responsive typography for the main title */
+@media (min-width: 640px) { /* sm */
+    #main-title {
+        font-size: 4.5rem; /* 7xl */
+        line-height: 1;
+    }
+}
+@media (min-width: 768px) { /* md */
+    #main-title {
+        font-size: 6rem; /* 8xl */
+        line-height: 1;
+    }
+}
+@media (min-width: 1024px) { /* lg */
+    #main-title {
+        font-size: 8rem; /* 9xl */
+        line-height: 1;
+    }
 }
