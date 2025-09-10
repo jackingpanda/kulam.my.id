@@ -1,155 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KULAM</title>
-
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Roboto:wght@900&family=Open+Sans:wght@900&family=Lato:wght@900&family=Poppins:wght@900&family=Raleway:wght@900&family=Playfair+Display:wght@900&family=Merriweather:wght@900&family=Oswald:wght@900&family=Nunito:wght@900&family=Pacifico&family=Caveat&family=Fira+Sans:wght@900&family=Bebas+Neue&family=Shadows+Into+Light&display=swap" rel="stylesheet">
-
-<style>
-body {
-  margin: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: #000;
-}
-
-/* canvas smoke */
-#fluid-canvas {
-  position: fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-  z-index: 1;
-  display:block;
-}
-
-/* teks kulam */
-h1 {
-  font-size: 10rem;
-  font-weight: 900;
-  letter-spacing: 6px;
-  cursor: default;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ffffff;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.6);
-  text-shadow:
-    0 0 4px rgba(255,255,255,0.4),
-    0 0 8px rgba(255,255,255,0.3),
-    0 0 12px rgba(255,255,255,0.2);
-  z-index: 2;
-}
-@media (max-width: 1024px) { h1 { font-size:6rem; letter-spacing:4px;} }
-@media (max-width: 768px) { h1 { font-size:4rem; letter-spacing:3px;} }
-@media (max-width: 480px) { h1 { font-size:2.5rem; letter-spacing:2px;} }
-
-#muteButton {
-  position: fixed;
-  right: 2vw;
-  bottom: 2vw;
-  width: 40px;
-  height: 40px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-  z-index: 3;
-}
-#muteButton:hover { background: rgba(255,255,255,0.1); transform: scale(1.1);}
-#muteButton svg { width:50%; height:50%; fill:white;}
-
-#datetime {
-  position: fixed;
-  left: 1vw;
-  bottom: 1vw;
-  font-size: 20px;
-  font-family: 'Courier New', monospace;
-  color: rgba(255,255,255,0.8);
-  z-index: 3;
-  user-select: none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>KULAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
-<!-- canvas smoke -->
-<canvas id="fluid-canvas"></canvas>
-
-<!-- judul -->
+<canvas></canvas>
 <h1 id="title">KULAM</h1>
 
-<!-- audio -->
 <audio id="bgAudio" autoplay loop>
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 
-<!-- mute button -->
 <div id="muteButton" title="Mute/Unmute">
   <svg id="muteIcon" viewBox="0 0 24 24">
     <path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>
   </svg>
 </div>
 
-<!-- datetime -->
 <div id="datetime"></div>
 
-<script>
-/* ---------------- FONT RANDOM ---------------- */
-const title = document.getElementById("title");
-const fonts = ['Montserrat','Roboto','Open Sans','Lato','Poppins','Raleway','Playfair Display','Merriweather','Oswald','Nunito','Pacifico','Caveat','Fira Sans','Bebas Neue','Shadows Into Light'];
-let lastFont='';
-function changeFontRandomly(){
-  let randomFont;
-  do{ randomFont=fonts[Math.floor(Math.random()*fonts.length)]; }
-  while(randomFont===lastFont);
-  title.style.fontFamily=randomFont;
-  lastFont=randomFont;
-}
-setInterval(changeFontRandomly,100);
-
-/* ---------------- MUTE ---------------- */
-const audio = document.getElementById('bgAudio');
-const muteButton = document.getElementById('muteButton');
-const muteIcon = document.getElementById('muteIcon');
-let isMuted=false;
-muteButton.addEventListener('click',()=>{
-  isMuted=!isMuted;
-  audio.muted=isMuted;
-  if(isMuted){
-    muteIcon.innerHTML='<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03zm-3.5 7l-5-5H3v-4h5l5-5v14z"/>';
-  } else {
-    muteIcon.innerHTML='<path d="M3 10v4h4l5 5V5L7 10H3zm13.5 2c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z"/>';
-  }
-});
-
-/* ---------------- DATETIME ---------------- */
-const datetimeEl = document.getElementById('datetime');
-function updateDateTime() {
-  const now = new Date();
-  const yy = String(now.getFullYear()).slice(-2);
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mins = String(now.getMinutes()).padStart(2,'0');
-  const ss = String(now.getSeconds()).padStart(2,'0');
-  datetimeEl.textContent = `${yy}//${mm}//${dd}  ${hh}:${mins}:${ss}`;
-}
-setInterval(updateDateTime, 1000);
-updateDateTime();
-</script>
-
-<!-- SCRIPT FLUID SMOKE -->
-<script src="https://cdn.jsdelivr.net/gh/PavelDoGreat/WebGL-Fluid-Simulation/script.js"></script>
-
+<script src="./script.js"></script>
+<script src="./ui.js"></script>
 </body>
 </html>
